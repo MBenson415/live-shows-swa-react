@@ -12,6 +12,7 @@ function App() {
     async function getUserInfo() {
       try {
         const response = await fetch('/.auth/me');
+        if (!response.ok) return;
         const payload = await response.json();
         const { clientPrincipal } = payload;
         setUserInfo(clientPrincipal);
@@ -22,13 +23,32 @@ function App() {
     getUserInfo();
   }, []);
 
+  const handleLogin = (e) => {
+    if (import.meta.env.DEV) {
+      e.preventDefault();
+      setUserInfo({
+        userDetails: "dev_user@example.com",
+        identityProvider: "aad",
+        userId: "dev_user_id",
+        userRoles: ["anonymous", "authenticated"]
+      });
+    }
+  };
+
+  const handleLogout = (e) => {
+    if (import.meta.env.DEV) {
+      e.preventDefault();
+      setUserInfo(null);
+    }
+  };
+
   if (!userInfo) {
     return (
       <div className="App">
         <h1>Live Shows App</h1>
         <div className="login-container">
           <p>Please login to manage live shows.</p>
-          <a href="/.auth/login/aad">Login with Microsoft</a>
+          <a href="/.auth/login/aad" onClick={handleLogin}>Login with Microsoft</a>
         </div>
       </div>
     );
@@ -40,7 +60,7 @@ function App() {
         <h1>Live Shows App</h1>
         <div className="user-info">
           <span>Welcome, {userInfo.userDetails}</span>
-          <a href="/.auth/logout">Logout</a>
+          <a href="/.auth/logout" onClick={handleLogout}>Logout</a>
         </div>
       </header>
       
