@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Live Shows CRUD</h1>
+      <h1>Live Shows App</h1>
       
       <div className="tabs">
         <button onClick={() => setActiveTab('events')} disabled={activeTab === 'events'}>Events</button>
