@@ -27,7 +27,7 @@ function App() {
     if (import.meta.env.DEV) {
       e.preventDefault();
       setUserInfo({
-        userDetails: "marshall@clinedge.io",
+        userDetails: "marshall@clinedge.io",  
         identityProvider: "aad",
         userId: "dev_user_id",
         userRoles: ["anonymous", "authenticated"]
