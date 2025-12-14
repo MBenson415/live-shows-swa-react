@@ -28,7 +28,7 @@ export default function VenueManager() {
     const [expandedVenueId, setExpandedVenueId] = useState(null);
     const [venueEvents, setVenueEvents] = useState({});
     const [formData, setFormData] = useState({
-        name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: '', address: ''
+        name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: ''
     });
     const [editingId, setEditingId] = useState(null);
 
@@ -90,7 +90,6 @@ export default function VenueManager() {
             state,
             zip,
             country,
-            address: place.formatted_address || '',
             google_maps_link: place.url || ''
         }));
     };
@@ -184,7 +183,7 @@ export default function VenueManager() {
 
             if (res.ok) {
                 setFormData({
-                    name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: '', address: ''
+                    name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: ''
                 });
                 setEditingId(null);
                 fetchVenues();
@@ -216,8 +215,7 @@ export default function VenueManager() {
             country: venue.COUNTRY,
             city: venue.CITY,
             street: venue.STREET,
-            google_maps_link: venue.GOOGLE_MAPS_LINK,
-            address: venue.ADDRESS
+            google_maps_link: venue.GOOGLE_MAPS_LINK
         });
         setEditingId(venue.ID);
     }
@@ -301,14 +299,13 @@ export default function VenueManager() {
                 <input name="zip" placeholder="Zip" value={formData.zip} onChange={handleInputChange} />
                 <input name="country" placeholder="Country" value={formData.country} onChange={handleInputChange} />
                 <input name="street" placeholder="Street" value={formData.street} onChange={handleInputChange} />
-                <input name="address" placeholder="Full Address" value={formData.address} onChange={handleInputChange} />
                 <input name="google_maps_link" placeholder="Google Maps Link" value={formData.google_maps_link} onChange={handleInputChange} style={{ gridColumn: 'span 2' }} />
                 
                 <div style={{ gridColumn: 'span 2' }}>
                     <button type="submit">{editingId ? 'Update' : 'Add'} Venue</button>
                     {editingId && <button type="button" onClick={() => { 
                         setEditingId(null); 
-                        setFormData({ name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: '', address: '' }); 
+                        setFormData({ name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: '' }); 
                     }}>Cancel</button>}
                 </div>
             </form>

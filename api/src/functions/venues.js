@@ -30,11 +30,10 @@ app.http('venues', {
                     .input('city', sql.NVarChar, body.city)
                     .input('street', sql.NVarChar, body.street)
                     .input('google_maps_link', sql.NVarChar, body.google_maps_link)
-                    .input('address', sql.NVarChar, body.address)
                     .query(`
-                        INSERT INTO dbo.VENUE (NAME, STATE, ZIP, COUNTRY, CITY, STREET, GOOGLE_MAPS_LINK, ADDRESS)
+                        INSERT INTO dbo.VENUE (NAME, STATE, ZIP, COUNTRY, CITY, STREET, GOOGLE_MAPS_LINK)
                         OUTPUT INSERTED.*
-                        VALUES (@name, @state, @zip, @country, @city, @street, @google_maps_link, @address)
+                        VALUES (@name, @state, @zip, @country, @city, @street, @google_maps_link)
                     `);
                 return { jsonBody: result.recordset[0], status: 201 };
             } else if (method === 'PUT') {
@@ -48,12 +47,10 @@ app.http('venues', {
                     .input('city', sql.NVarChar, body.city)
                     .input('street', sql.NVarChar, body.street)
                     .input('google_maps_link', sql.NVarChar, body.google_maps_link)
-                    .input('address', sql.NVarChar, body.address)
                     .query(`
                         UPDATE dbo.VENUE
                         SET NAME = @name, STATE = @state, ZIP = @zip, COUNTRY = @country,
-                            CITY = @city, STREET = @street, GOOGLE_MAPS_LINK = @google_maps_link,
-                            ADDRESS = @address
+                            CITY = @city, STREET = @street, GOOGLE_MAPS_LINK = @google_maps_link
                         WHERE ID = @id;
                         SELECT * FROM dbo.VENUE WHERE ID = @id
                     `);
