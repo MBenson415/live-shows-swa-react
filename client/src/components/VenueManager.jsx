@@ -188,9 +188,13 @@ export default function VenueManager() {
                 });
                 setEditingId(null);
                 fetchVenues();
+            } else {
+                const errorText = await res.text();
+                alert(`Failed to save venue: ${errorText}`);
             }
         } catch (error) {
             console.error("Error saving venue:", error);
+            alert(`Error saving venue: ${error.message}`);
         }
     }
 
