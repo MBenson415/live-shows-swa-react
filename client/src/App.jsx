@@ -73,6 +73,7 @@ function App() {
         <h1>Live Shows App</h1>
         <div className="user-info">
           <span>Welcome, {userInfo.userDetails}</span>
+          <a href="https://portal.azure.com/#view/Microsoft_Azure_Storage/ContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2F4c6dabdd-a6e5-4e06-be96-74b110203a4a%2Fresourcegroups%2Fretrieveshowsapi%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Fsquarespacemusic/path/%24web/etag/%220x8DD254A2FE12B12%22/defaultId//publicAccessVal/Blob" target="_blank" rel="noopener noreferrer">Azure Storage</a>
           <a href="/.auth/logout" onClick={handleLogout}>Logout</a>
         </div>
       </header>
