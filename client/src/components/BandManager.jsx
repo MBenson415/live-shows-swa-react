@@ -47,6 +47,44 @@ export default function BandManager() {
         setEditingId(band.ID);
     }
 
+    async function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        await uploadFile(file);
+    }
+
+    async function uploadFile(file, overwrite = false) {
+        const data = new FormData();
+        data.append('image', file);
+
+        let url = '/api/upload';
+        if (overwrite) url += '?overwrite=true';
+
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                body: data
+            });
+
+            if (res.status === 409) {
+                if (confirm('File already exists. Do you want to overwrite it?')) {
+                    await uploadFile(file, true);
+                }
+                return;
+            }
+
+            if (res.ok) {
+                const result = await res.json();
+                setFormData(prev => ({ ...prev, logo_image_link: result.url }));
+            } else {
+                alert('Image upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image');
+        }
+    }
+
     return (
         <div className="manager">
             <h2>Manage Bands</h2>
@@ -58,6 +96,13 @@ export default function BandManager() {
                     onChange={handleInputChange}
                     required
                 />
+                
+                <div style={{ marginBottom: '10px' }}>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Band Logo:</label>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+                    {formData.logo_image_link && <div style={{ marginTop: '5px', fontSize: '0.8em' }}>Current Link: {formData.logo_image_link}</div>}
+                </div>
+
                 <input
                     name="logo_image_link"
                     placeholder="Logo URL"

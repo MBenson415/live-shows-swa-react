@@ -98,6 +98,44 @@ export default function EventManager() {
         return venue ? venue.NAME : 'Unknown Venue';
     }
 
+    async function handleImageUpload(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        await uploadFile(file);
+    }
+
+    async function uploadFile(file, overwrite = false) {
+        const data = new FormData();
+        data.append('image', file);
+
+        let url = '/api/upload';
+        if (overwrite) url += '?overwrite=true';
+
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                body: data
+            });
+
+            if (res.status === 409) {
+                if (confirm('File already exists. Do you want to overwrite it?')) {
+                    await uploadFile(file, true);
+                }
+                return;
+            }
+
+            if (res.ok) {
+                const result = await res.json();
+                setFormData(prev => ({ ...prev, promo: result.url }));
+            } else {
+                alert('Image upload failed');
+            }
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            alert('Error uploading image');
+        }
+    }
+
     return (
         <div className="manager">
             <h2>Manage Events</h2>
@@ -124,7 +162,14 @@ export default function EventManager() {
 
                 <input name="ticket_link" placeholder="Ticket Link" value={formData.ticket_link} onChange={handleInputChange} />
                 <input name="facebook_link" placeholder="Facebook Link" value={formData.facebook_link} onChange={handleInputChange} />
-                <textarea name="promo" placeholder="Promo Text" value={formData.promo} onChange={handleInputChange} style={{ gridColumn: 'span 2' }} />
+                
+                <div style={{ gridColumn: 'span 2' }}>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Promo Image:</label>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+                    {formData.promo && <div style={{ marginTop: '5px', fontSize: '0.8em' }}>Current Link: {formData.promo}</div>}
+                </div>
+
+                <textarea name="promo" placeholder="Promo image link" value={formData.promo} onChange={handleInputChange} style={{ gridColumn: 'span 2' }} />
 
                 <div style={{ gridColumn: 'span 2' }}>
                     <button type="submit">{editingId ? 'Update' : 'Add'} Event</button>
