@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Select from 'react-select';
 
 export default function EventManager() {
     const [events, setEvents] = useState([]);
@@ -41,6 +42,10 @@ export default function EventManager() {
 
     async function handleSubmit(e) {
         e.preventDefault();
+        if (!formData.venue_id) {
+            alert('Please select a venue');
+            return;
+        }
         const method = editingId ? 'PUT' : 'POST';
         const body = editingId ? { ...formData, id: editingId } : formData;
 
@@ -105,10 +110,17 @@ export default function EventManager() {
                     {bands.map(b => <option key={b.ID} value={b.ID}>{b.NAME}</option>)}
                 </select>
 
-                <select name="venue_id" value={formData.venue_id} onChange={handleInputChange} required>
-                    <option value="">Select Venue</option>
-                    {venues.map(v => <option key={v.ID} value={v.ID}>{v.NAME}</option>)}
-                </select>
+                <div style={{ minWidth: '200px' }}>
+                    <Select
+                        options={venues.map(v => ({ value: v.ID, label: v.NAME }))}
+                        value={venues.find(v => v.ID === formData.venue_id) ? { value: formData.venue_id, label: venues.find(v => v.ID === formData.venue_id).NAME } : null}
+                        onChange={(option) => setFormData(prev => ({ ...prev, venue_id: option ? option.value : '' }))}
+                        placeholder="Select Venue"
+                        isClearable
+                        isSearchable
+                        required
+                    />
+                </div>
 
                 <input name="ticket_link" placeholder="Ticket Link" value={formData.ticket_link} onChange={handleInputChange} />
                 <input name="facebook_link" placeholder="Facebook Link" value={formData.facebook_link} onChange={handleInputChange} />

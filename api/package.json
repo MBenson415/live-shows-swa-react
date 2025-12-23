@@ -15,6 +15,7 @@
     "mssql": "^12.2.0"
   },
   "devDependencies": {
-    "azure-functions-core-tools": "^4.x"
+    "azure-functions-core-tools": "^4.x",
+    "concurrently": "^9.2.1"
   }
 }
