@@ -6,6 +6,7 @@ export default function EventManager() {
     const [bands, setBands] = useState([]);
     const [venues, setVenues] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [showFutureOnly, setShowFutureOnly] = useState(true);
     const [formData, setFormData] = useState({
         name: '', band_id: '', venue_id: '', date: '', ticket_link: '', facebook_link: '', promo: ''
     });
@@ -186,8 +187,19 @@ export default function EventManager() {
                     placeholder="Search events by band or venue..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ width: '100%', padding: '12px', fontSize: '16px' }}
+                    style={{ width: '100%', padding: '12px', fontSize: '16px', boxSizing: 'border-box' }}
                 />
+                <div style={{ marginTop: '10px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            checked={showFutureOnly}
+                            onChange={(e) => setShowFutureOnly(e.target.checked)}
+                            style={{ width: 'auto' }}
+                        />
+                        Show Future Events Only
+                    </label>
+                </div>
             </div>
 
             <ul>
@@ -196,7 +208,18 @@ export default function EventManager() {
                     const bandName = getBandName(event.BAND_ID).toLowerCase();
                     const venueName = getVenueName(event.VENUE_ID).toLowerCase();
                     const eventName = event.NAME.toLowerCase();
-                    return bandName.includes(term) || venueName.includes(term) || eventName.includes(term);
+                    const matchesSearch = bandName.includes(term) || venueName.includes(term) || eventName.includes(term);
+
+                    if (!matchesSearch) return false;
+
+                    if (showFutureOnly) {
+                        const eventDate = new Date(event.DATE);
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
+                        return eventDate >= today;
+                    }
+
+                    return true;
                 }).map(event => (
                     <li key={event.ID}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
