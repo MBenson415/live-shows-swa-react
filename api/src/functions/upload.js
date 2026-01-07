@@ -1,3 +1,9 @@
+// Polyfill crypto for Azure Static Web Apps managed functions
+if (typeof globalThis.crypto === 'undefined') {
+    const nodeCrypto = require('crypto');
+    globalThis.crypto = nodeCrypto.webcrypto || nodeCrypto;
+}
+
 const { app } = require('@azure/functions');
 const { BlobServiceClient } = require('@azure/storage-blob');
 
