@@ -1,7 +1,7 @@
 const { app } = require('@azure/functions');
 const { BlobServiceClient } = require('@azure/storage-blob');
 
-const connectionString = process.env.AzureWebJobsStorage;
+const connectionString = process.env.BLOB_STORAGE_CONNECTION_STRING;
 const containerName = '$web';
 
 app.http('upload', {
@@ -11,8 +11,8 @@ app.http('upload', {
         context.log('Upload request received');
         try {
             if (!connectionString) {
-                context.log('Error: AzureWebJobsStorage connection string not found.');
-                return { status: 500, body: "AzureWebJobsStorage connection string not found." };
+                context.log('Error: BLOB_STORAGE_CONNECTION_STRING not found.');
+                return { status: 500, body: "BLOB_STORAGE_CONNECTION_STRING not found." };
             }
 
             const formData = await request.formData();
