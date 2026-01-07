@@ -1,7 +1,6 @@
 const { app } = require('@azure/functions');
 const { BlobServiceClient } = require('@azure/storage-blob');
 
-const connectionString = process.env.BLOB_STORAGE_CONNECTION_STRING;
 const containerName = '$web';
 
 app.http('upload', {
@@ -10,50 +9,58 @@ app.http('upload', {
     handler: async (request, context) => {
         context.log('Upload request received');
         try {
+            const connectionString = process.env.BLOB_STORAGE_CONNECTION_STRING;
+            
             if (!connectionString) {
                 context.log('Error: BLOB_STORAGE_CONNECTION_STRING not found.');
-                return { status: 500, body: "BLOB_STORAGE_CONNECTION_STRING not found." };
+                return { status: 500, jsonBody: { error: "BLOB_STORAGE_CONNECTION_STRING not found." } };
+            }
+            context.log('Connection string found');
+
+            // Parse JSON body with base64 encoded file
+            let body;
+            try {
+                body = await request.json();
+            } catch (parseError) {
+                context.log('Error parsing JSON body:', parseError.message);
+                return { status: 400, jsonBody: { error: "Invalid JSON body. Expected { fileName, fileType, fileData }" } };
             }
 
-            const formData = await request.formData();
-            const file = formData.get('image');
+            const { fileName, fileType, fileData } = body;
             const overwrite = request.query.get('overwrite') === 'true';
 
-            if (!file) {
-                context.log('Error: No file uploaded.');
-                return { status: 400, body: "No file uploaded. Please send a file with key 'image'." };
+            if (!fileName || !fileData) {
+                context.log('Error: Missing fileName or fileData');
+                return { status: 400, jsonBody: { error: "Missing fileName or fileData in request body." } };
             }
-            context.log(`File received: ${file.name}, Size: ${file.size}, Type: ${file.type}`);
+            context.log(`File received: ${fileName}, Type: ${fileType}`);
 
             const blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
             const containerClient = blobServiceClient.getContainerClient(containerName);
 
-            // Create container if it doesn't exist
-            context.log(`Checking container: ${containerName}`);
-            try {
-                await containerClient.createIfNotExists({
-                    access: 'blob' // Allow public read access to blobs
-                });
-            } catch (err) {
-                context.log(`Warning: Could not create container ${containerName}. It might already exist or be a system container. Error: ${err.message}`);
-                // Continue, as it might just be that we can't create it but can write to it
-            }
+            context.log(`Using container: ${containerName}`);
 
-            const blobName = file.name;
+            const blobName = fileName;
             const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-            if (!overwrite && await blockBlobClient.exists()) {
-                context.log(`File ${blobName} already exists and overwrite is false.`);
-                return { status: 409, body: "File already exists" };
+            if (!overwrite) {
+                try {
+                    const exists = await blockBlobClient.exists();
+                    if (exists) {
+                        context.log(`File ${blobName} already exists and overwrite is false.`);
+                        return { status: 409, jsonBody: { error: "File already exists" } };
+                    }
+                } catch (existsError) {
+                    context.log(`Warning checking exists: ${existsError.message}`);
+                }
             }
 
-            // Convert file to ArrayBuffer/Buffer for upload
+            // Decode base64 file data
             context.log(`Uploading blob: ${blobName}`);
-            const arrayBuffer = await file.arrayBuffer();
-            const buffer = Buffer.from(arrayBuffer);
+            const buffer = Buffer.from(fileData, 'base64');
 
             await blockBlobClient.upload(buffer, buffer.length, {
-                blobHTTPHeaders: { blobContentType: file.type }
+                blobHTTPHeaders: { blobContentType: fileType || 'application/octet-stream' }
             });
             context.log(`Upload successful: ${blockBlobClient.url}`);
 
@@ -65,8 +72,10 @@ app.http('upload', {
             };
 
         } catch (error) {
-            context.error('Error uploading file:', error);
-            return { status: 500, body: error.message };
+            context.error('Error uploading file:', error.message, error.stack);
+            return { status: 500, jsonBody: { error: error.message } };
         }
+    }
+});
     }
 });

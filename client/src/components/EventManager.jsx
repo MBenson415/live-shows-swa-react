@@ -106,8 +106,18 @@ export default function EventManager() {
     }
 
     async function uploadFile(file, overwrite = false) {
-        const data = new FormData();
-        data.append('image', file);
+        // Convert file to base64
+        const reader = new FileReader();
+        const base64Promise = new Promise((resolve, reject) => {
+            reader.onload = () => {
+                const base64 = reader.result.split(',')[1]; // Remove data:...;base64, prefix
+                resolve(base64);
+            };
+            reader.onerror = reject;
+        });
+        reader.readAsDataURL(file);
+        
+        const fileData = await base64Promise;
 
         let url = '/api/upload';
         if (overwrite) url += '?overwrite=true';
@@ -115,7 +125,12 @@ export default function EventManager() {
         try {
             const res = await fetch(url, {
                 method: 'POST',
-                body: data
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    fileName: file.name,
+                    fileType: file.type,
+                    fileData: fileData
+                })
             });
 
             if (res.status === 409) {
@@ -129,7 +144,8 @@ export default function EventManager() {
                 const result = await res.json();
                 setFormData(prev => ({ ...prev, promo: result.url }));
             } else {
-                alert('Image upload failed');
+                const errorData = await res.json().catch(() => ({}));
+                alert('Image upload failed: ' + (errorData.error || 'Unknown error'));
             }
         } catch (error) {
             console.error('Error uploading image:', error);
