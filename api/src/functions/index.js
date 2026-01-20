@@ -3,3 +3,5 @@ require('./bands');
 require('./events');
 require('./venues');
 require('./upload');
+require('./racks');
+require('./rackEquipment');

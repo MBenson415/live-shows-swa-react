@@ -3,6 +3,7 @@ import './App.css'
 import BandManager from './components/BandManager';
 import EventManager from './components/EventManager';
 import VenueManager from './components/VenueManager';
+import RackBuilder from './components/RackBuilder';
 
 function App() {
   const [activeTab, setActiveTab] = useState('events');
@@ -82,12 +83,14 @@ function App() {
         <button onClick={() => setActiveTab('events')} disabled={activeTab === 'events'}>Events</button>
         <button onClick={() => setActiveTab('venues')} disabled={activeTab === 'venues'}>Venues</button>
         <button onClick={() => setActiveTab('bands')} disabled={activeTab === 'bands'}>Bands</button>
+        <button onClick={() => setActiveTab('racks')} disabled={activeTab === 'racks'}>Rack Builder</button>
       </div>
 
       <div className="content">
         {activeTab === 'bands' && <BandManager />}
         {activeTab === 'events' && <EventManager />}
         {activeTab === 'venues' && <VenueManager />}
+        {activeTab === 'racks' && <RackBuilder />}
       </div>
     </div>
   )
