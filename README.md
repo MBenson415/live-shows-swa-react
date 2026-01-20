@@ -26,6 +26,8 @@ The application is deployed at: [https://ambitious-forest-02d47500f.3.azurestati
 - **Google Maps API**:
   - `@react-google-maps/api`: For rendering interactive maps.
   - `react-google-autocomplete`: For address autocomplete in venue management.
+- **DnD Kit (`@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`)**: Modern drag-and-drop toolkit for React, used in the Rack Builder for equipment positioning.
+- **React Image Crop (`react-image-crop`)**: Image cropping component for fitting equipment images to proper aspect ratios.
 
 ### Backend (API)
 - **Azure Functions (Node.js v4)**: Serverless compute service to run the API endpoints.
@@ -57,6 +59,15 @@ The frontend is built as a Single Page Application (SPA) using React, organized 
   - Manages performance locations.
   - Integrates with Google Maps API for address autocomplete and visual map location picking.
   - Sorts venues alphabetically for easy navigation.
+
+- **Rack Builder (`RackBuilder.jsx`)**:
+  - Visual rack equipment planning tool for managing audio equipment.
+  - Supports creating multiple racks with customizable RU capacity, dimensions, cost, weight, and power capacity.
+  - Features drag-and-drop equipment positioning using `@dnd-kit/core` with automatic conflict resolution.
+  - Includes front/back mounting support for comprehensive rack planning.
+  - Provides image cropping functionality (`react-image-crop`) to fit equipment photos to proper aspect ratios.
+  - Displays real-time totals for cost, weight, power consumption, and depth clearance.
+  - Tracks power conditioner capacity and demand across all equipment in each rack.
 
 - **App Shell (`App.jsx`)**:
   - Handles user authentication via Azure Static Web Apps auth (with local development mocking).
