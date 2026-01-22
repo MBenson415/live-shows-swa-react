@@ -4,10 +4,12 @@ import BandManager from './components/BandManager';
 import EventManager from './components/EventManager';
 import VenueManager from './components/VenueManager';
 import RackBuilder from './components/RackBuilder';
+import PublicSite from './components/PublicSite';
 
 function App() {
   const [activeTab, setActiveTab] = useState('events');
   const [userInfo, setUserInfo] = useState(null);
+  const [showPublicSite, setShowPublicSite] = useState(true);
 
   useEffect(() => {
     async function getUserInfo() {
@@ -40,8 +42,14 @@ function App() {
     if (import.meta.env.DEV) {
       e.preventDefault();
       setUserInfo(null);
+      setShowPublicSite(true);
     }
   };
+
+  // Show public site if user is not trying to access admin
+  if (showPublicSite && !userInfo) {
+    return <PublicSite onNavigateToAdmin={() => setShowPublicSite(false)} />;
+  }
 
   if (!userInfo) {
     return (
@@ -71,8 +79,9 @@ function App() {
   return (
     <div className="App">
       <header className="app-header">
-        <h1>Live Shows App</h1>
+        <h1>Live Shows App - Admin</h1>
         <div className="user-info">
+          <button onClick={() => setShowPublicSite(true)} className="back-to-public">Back to Public Site</button>
           <span>Welcome, {userInfo.userDetails}</span>
           <a href="https://portal.azure.com/#view/Microsoft_Azure_Storage/ContainerMenuBlade/~/overview/storageAccountId/%2Fsubscriptions%2F4c6dabdd-a6e5-4e06-be96-74b110203a4a%2Fresourcegroups%2Fretrieveshowsapi%2Fproviders%2FMicrosoft.Storage%2FstorageAccounts%2Fsquarespacemusic/path/%24web/etag/%220x8DD254A2FE12B12%22/defaultId//publicAccessVal/Blob" target="_blank" rel="noopener noreferrer">Azure Storage</a>
           <a href="/.auth/logout" onClick={handleLogout}>Logout</a>
