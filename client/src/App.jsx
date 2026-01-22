@@ -33,7 +33,7 @@ function App() {
         userDetails: "marshall@clinedge.io",  
         identityProvider: "aad",
         userId: "dev_user_id",
-        userRoles: ["anonymous", "authenticated"]
+        userRoles: [ "authenticated"]
       });
     }
   };

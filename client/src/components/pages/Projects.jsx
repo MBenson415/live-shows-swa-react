@@ -5,7 +5,7 @@ function Projects() {
       name: 'Midnight Maniac',
       bandImage: 'https://squarespacemusic.blob.core.windows.net/$web/Midnight+Maniacswm+(4+of+8).webp',
       logo: 'https://squarespacemusic.blob.core.windows.net/$web/midnightmaniac.png',
-      url: 'https://midnightmaniac.net',
+      url: 'https://www.midnightmaniac.net/',
       description: 'Midnight Maniac is a progressive pop act that combines electronic and upbeat hard rock elements to create a fresh and darkly compelling sound. Established in 2023 in Austin, TX by Jake Allard and Marshall Benson, the multi-instrumentalist duo shares songwriting duties; with Allard taking on lead vocals and Benson helming lead guitar and studio production.\n\nUnsatisfied with traditional rock \'n roll, Midnight Maniac emerges as a beacon of change with an energetic and adventurous departure from the predictable, often indulging in unexpected key signature and time changes while delivering memorable hooks; Allard\'s catchy vocal delivery is well-complemented by Benson\'s signature precision guitar attack, taking the listener on an auditory ride that is laden with fantastic imagery that delves into hyper-conscious realms, lyrically touching on aspects of dreams, the extra-terrestrial, and a rich inner world.\n\nMusic fans who crave more substance than the saccharine diet that pure pop provides, but who find progressive rock too tedious or pretentious will find a satisfying balance in Midnight Maniac\'s imaginative offering which often expertly oscillates between intense instrumental passages and uplifting vocal melodies.'
     },
     {
