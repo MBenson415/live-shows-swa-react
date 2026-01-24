@@ -4,6 +4,7 @@ import BandManager from './components/BandManager';
 import EventManager from './components/EventManager';
 import VenueManager from './components/VenueManager';
 import RackBuilder from './components/RackBuilder';
+import BlogManager from './components/BlogManager';
 import PublicSite from './components/PublicSite';
 
 function App() {
@@ -46,8 +47,8 @@ function App() {
     }
   };
 
-  // Show public site if user is not trying to access admin
-  if (showPublicSite && !userInfo) {
+  // Show public site if user wants to view it
+  if (showPublicSite) {
     return <PublicSite onNavigateToAdmin={() => setShowPublicSite(false)} />;
   }
 
@@ -93,6 +94,7 @@ function App() {
         <button onClick={() => setActiveTab('venues')} disabled={activeTab === 'venues'}>Venues</button>
         <button onClick={() => setActiveTab('bands')} disabled={activeTab === 'bands'}>Bands</button>
         <button onClick={() => setActiveTab('racks')} disabled={activeTab === 'racks'}>Rack Builder</button>
+        <button onClick={() => setActiveTab('blog')} disabled={activeTab === 'blog'}>Blog</button>
       </div>
 
       <div className="content">
@@ -100,6 +102,7 @@ function App() {
         {activeTab === 'events' && <EventManager />}
         {activeTab === 'venues' && <VenueManager />}
         {activeTab === 'racks' && <RackBuilder />}
+        {activeTab === 'blog' && <BlogManager />}
       </div>
     </div>
   )

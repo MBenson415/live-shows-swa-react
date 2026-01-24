@@ -188,11 +188,11 @@ export default function EventManager() {
 
                 <textarea name="promo" placeholder="Promo image link" value={formData.promo} onChange={handleInputChange} style={{ gridColumn: 'span 2' }} />
 
-                <div style={{ gridColumn: 'span 2' }}>
-                    <button type="submit">{editingId ? 'Update' : 'Add'} Event</button>
-                    {editingId && <button type="button" onClick={() => { 
-                        setEditingId(null); 
-                        setFormData({ name: '', band_id: '', venue_id: '', date: '', ticket_link: '', facebook_link: '', promo: '' }); 
+                <div style={{ gridColumn: 'span 2', display: 'flex', gap: '10px' }}>
+                    <button type="submit" className="btn-primary">{editingId ? 'Update' : 'Add'} Event</button>
+                    {editingId && <button type="button" className="btn-secondary" onClick={() => {
+                        setEditingId(null);
+                        setFormData({ name: '', band_id: '', venue_id: '', date: '', ticket_link: '', facebook_link: '', promo: '' });
                     }}>Cancel</button>}
                 </div>
             </form>

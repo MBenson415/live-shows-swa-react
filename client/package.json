@@ -21,6 +21,7 @@
     "react-dom": "^19.2.0",
     "react-google-autocomplete": "^2.7.5",
     "react-image-crop": "^11.0.7",
+    "react-markdown": "^10.1.0",
     "react-select": "^5.10.2"
   },
   "devDependencies": {

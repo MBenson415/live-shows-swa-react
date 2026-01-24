@@ -623,7 +623,7 @@ const RackBuilder = () => {
                                                     </span>
                                                 )}
                                                 {rack.PowerConditionerCapacity && (
-                                                    <span className="total-weight" style={{ background: 'rgba(59, 130, 246, 0.1)', color: '#1e40af' }}>
+                                                    <span className="total-power">
                                                         Power: {powerDemand} / {rack.PowerConditionerCapacity}
                                                     </span>
                                                 )}
@@ -846,7 +846,7 @@ const RackBuilder = () => {
                                                             </span>
                                                         )}
                                                         {selectedRack.RackDepth && equip.Depth && (
-                                                            <span className="total-weight" style={{ background: 'rgba(234, 179, 8, 0.1)', color: '#854d0e' }}>
+                                                            <span className="total-depth">
                                                                 Depth Δ: {(selectedRack.RackDepth - equip.Depth).toFixed(2)}"
                                                             </span>
                                                         )}

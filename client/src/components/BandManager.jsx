@@ -125,8 +125,10 @@ export default function BandManager() {
                     value={formData.logo_image_link}
                     onChange={handleInputChange}
                 />
-                <button type="submit">{editingId ? 'Update' : 'Add'} Band</button>
-                {editingId && <button type="button" onClick={() => { setEditingId(null); setFormData({ name: '', logo_image_link: '' }); }}>Cancel</button>}
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <button type="submit" className="btn-primary">{editingId ? 'Update' : 'Add'} Band</button>
+                    {editingId && <button type="button" className="btn-secondary" onClick={() => { setEditingId(null); setFormData({ name: '', logo_image_link: '' }); }}>Cancel</button>}
+                </div>
             </form>
 
             <ul>

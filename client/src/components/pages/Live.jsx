@@ -1,34 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function Live() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+function Live({ events = [], loading = false, error = null }) {
   const [modalImage, setModalImage] = useState(null);
-
-  useEffect(() => {
-    fetchEvents();
-  }, []);
-
-  async function fetchEvents() {
-    try {
-      setLoading(true);
-      const response = await fetch('https://retrieve-shows-api.azurewebsites.net/api/Shows?code=AmVc4bApim9xtR3Jl7y4FisknIJSgTrRHC4pPeB_q_9GAzFu1tILDg%3D%3D');
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch shows');
-      }
-
-      const data = await response.json();
-      console.log(data);
-      setEvents(data);
-      setLoading(false);
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err.message);
-      setLoading(false);
-    }
-  }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);

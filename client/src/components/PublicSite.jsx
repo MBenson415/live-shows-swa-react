@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import About from './pages/About';
 import Projects from './pages/Projects';
 import Live from './pages/Live';
@@ -6,11 +6,59 @@ import Press from './pages/Press';
 import Media from './pages/Media';
 import Studio from './pages/Studio';
 import Contact from './pages/Contact';
+import Blog from './pages/Blog';
 import '../styles/PublicSite.css';
 
 function PublicSite({ onNavigateToAdmin }) {
   const [activePage, setActivePage] = useState('about');
   const [mediaSubpage, setMediaSubpage] = useState('music');
+
+  // Prefetch events on site load
+  const [events, setEvents] = useState([]);
+  const [eventsLoading, setEventsLoading] = useState(true);
+  const [eventsError, setEventsError] = useState(null);
+
+  // Prefetch blog posts on site load
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [blogLoading, setBlogLoading] = useState(true);
+  const [blogError, setBlogError] = useState(null);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const response = await fetch('https://retrieve-shows-api.azurewebsites.net/api/Shows?code=AmVc4bApim9xtR3Jl7y4FisknIJSgTrRHC4pPeB_q_9GAzFu1tILDg%3D%3D');
+        if (!response.ok) {
+          throw new Error('Failed to fetch shows');
+        }
+        const data = await response.json();
+        setEvents(data);
+        setEventsLoading(false);
+      } catch (err) {
+        console.error('Error:', err);
+        setEventsError(err.message);
+        setEventsLoading(false);
+      }
+    }
+
+    async function fetchBlogPosts() {
+      try {
+        const response = await fetch('/api/blog');
+        if (!response.ok) {
+          throw new Error('Failed to fetch blog posts');
+        }
+        const data = await response.json();
+        setBlogPosts(data);
+        setBlogLoading(false);
+      } catch (err) {
+        console.error('Error:', err);
+        setBlogError(err.message);
+        setBlogLoading(false);
+      }
+    }
+
+    fetchEvents();
+    fetchBlogPosts();
+  }, []);
 
   const renderPage = () => {
     switch (activePage) {
@@ -19,7 +67,7 @@ function PublicSite({ onNavigateToAdmin }) {
       case 'projects':
         return <Projects />;
       case 'live':
-        return <Live />;
+        return <Live events={events} loading={eventsLoading} error={eventsError} />;
       case 'press':
         return <Press />;
       case 'media':
@@ -28,6 +76,8 @@ function PublicSite({ onNavigateToAdmin }) {
         return <Studio />;
       case 'contact':
         return <Contact />;
+      case 'blog':
+        return <Blog posts={blogPosts} loading={blogLoading} error={blogError} />;
       default:
         return <About />;
     }
@@ -37,13 +87,15 @@ function PublicSite({ onNavigateToAdmin }) {
     <div className="public-site">
       <header className="public-header">
         <h1 className="site-title">Marshall Benson</h1>
-        <p className="site-subtitle"><i>The Striker</i></p>
+        <div className="site-subtitle-wrapper">
+          <img src="https://squarespacemusic.blob.core.windows.net/$web/copilot_striker_cropped.png" alt="The Striker" className="site-subtitle-image" />
+        </div>
         <nav className="main-nav">
           <button
             className={activePage === 'about' ? 'active' : ''}
             onClick={() => setActivePage('about')}
           >
-            About
+            Home
           </button>
           <button
             className={activePage === 'projects' ? 'active' : ''}
@@ -68,6 +120,12 @@ function PublicSite({ onNavigateToAdmin }) {
             onClick={() => setActivePage('media')}
           >
             Media
+          </button>
+          <button
+            className={activePage === 'blog' ? 'active' : ''}
+            onClick={() => setActivePage('blog')}
+          >
+            Blog
           </button>
           <button
             className={activePage === 'studio' ? 'active' : ''}

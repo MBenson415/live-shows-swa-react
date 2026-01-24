@@ -5,3 +5,4 @@ require('./venues');
 require('./upload');
 require('./racks');
 require('./rackEquipment');
+require('./blog');

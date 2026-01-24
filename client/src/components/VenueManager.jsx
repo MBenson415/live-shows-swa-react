@@ -301,11 +301,11 @@ export default function VenueManager() {
                 <input name="street" placeholder="Street" value={formData.street} onChange={handleInputChange} />
                 <input name="google_maps_link" placeholder="Google Maps Link" value={formData.google_maps_link} onChange={handleInputChange} style={{ gridColumn: 'span 2' }} />
                 
-                <div style={{ gridColumn: 'span 2' }}>
-                    <button type="submit">{editingId ? 'Update' : 'Add'} Venue</button>
-                    {editingId && <button type="button" onClick={() => { 
-                        setEditingId(null); 
-                        setFormData({ name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: '' }); 
+                <div style={{ gridColumn: 'span 2', display: 'flex', gap: '10px' }}>
+                    <button type="submit" className="btn-primary">{editingId ? 'Update' : 'Add'} Venue</button>
+                    {editingId && <button type="button" className="btn-secondary" onClick={() => {
+                        setEditingId(null);
+                        setFormData({ name: '', state: '', zip: '', country: '', city: '', street: '', google_maps_link: '' });
                     }}>Cancel</button>}
                 </div>
             </form>
