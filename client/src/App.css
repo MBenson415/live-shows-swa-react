@@ -231,6 +231,18 @@
   transform: translateY(-1px);
 }
 
+.badge-inactive {
+  background: rgba(255, 100, 100, 0.15);
+  color: #ff6b6b;
+  font-size: 0.75em;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .state-box {
   background: var(--text-primary);
   color: var(--bg-dark);

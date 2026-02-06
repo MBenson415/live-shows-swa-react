@@ -25,7 +25,11 @@ app.http('bands', {
                 const result = await pool.request()
                     .input('name', sql.VarChar, body.name)
                     .input('logo', sql.NVarChar, body.logo_image_link)
-                    .query('INSERT INTO dbo.BANDS (NAME, LOGO_IMAGE_LINK) OUTPUT INSERTED.* VALUES (@name, @logo)');
+                    .input('is_active', sql.Bit, body.is_active !== undefined ? body.is_active : 1)
+                    .input('start_date', sql.Date, body.start_date || null)
+                    .input('end_date', sql.Date, body.end_date || null)
+                    .input('location', sql.VarChar(255), body.location || null)
+                    .query('INSERT INTO dbo.BANDS (NAME, LOGO_IMAGE_LINK, IS_ACTIVE, START_DATE, END_DATE, LOCATION) OUTPUT INSERTED.* VALUES (@name, @logo, @is_active, @start_date, @end_date, @location)');
                 return { jsonBody: result.recordset[0], status: 201 };
             } else if (method === 'PUT') {
                 const body = await request.json();
@@ -33,7 +37,11 @@ app.http('bands', {
                     .input('id', sql.Int, body.id)
                     .input('name', sql.VarChar, body.name)
                     .input('logo', sql.NVarChar, body.logo_image_link)
-                    .query('UPDATE dbo.BANDS SET NAME = @name, LOGO_IMAGE_LINK = @logo WHERE ID = @id; SELECT * FROM dbo.BANDS WHERE ID = @id');
+                    .input('is_active', sql.Bit, body.is_active !== undefined ? body.is_active : 1)
+                    .input('start_date', sql.Date, body.start_date || null)
+                    .input('end_date', sql.Date, body.end_date || null)
+                    .input('location', sql.VarChar(255), body.location || null)
+                    .query('UPDATE dbo.BANDS SET NAME = @name, LOGO_IMAGE_LINK = @logo, IS_ACTIVE = @is_active, START_DATE = @start_date, END_DATE = @end_date, LOCATION = @location WHERE ID = @id; SELECT * FROM dbo.BANDS WHERE ID = @id');
                 return { jsonBody: result.recordset[0] };
             } else if (method === 'DELETE') {
                 const idToDelete = id || (await request.json()).id;

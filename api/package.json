@@ -7,7 +7,7 @@
   },
   "main": "src/functions/index.js",
   "scripts": {
-    "start": "func start",
+    "start": "PATH=/opt/homebrew/opt/node@20/bin:$PATH func start",
     "test": "echo \"No tests yet...\""
   },
   "dependencies": {

@@ -345,26 +345,26 @@ export default function VenueManager() {
                             </div>
                         </div>
                         {expandedVenueId === venue.ID && (
-                            <div style={{ marginTop: '15px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                                <h4 style={{ marginTop: 0, marginBottom: '10px', color: '#2c3e50' }}>Events</h4>
+                            <div style={{ marginTop: '15px', padding: '15px', backgroundColor: 'var(--bg-dark)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                                <h4 style={{ marginTop: 0, marginBottom: '10px', color: 'var(--text-primary)' }}>Events</h4>
                                 {venueEvents[venue.ID] && venueEvents[venue.ID].length > 0 ? (
                                     <ul style={{ padding: 0, display: 'grid', gap: '8px' }}>
                                         {venueEvents[venue.ID].map(event => (
-                                            <li key={event.ID} style={{ padding: '10px', background: 'white', border: '1px solid #eee', borderRadius: '6px', display: 'flex', justifyContent: 'space-between' }}>
+                                            <li key={event.ID} style={{ padding: '10px', background: 'var(--bg-elevated)', border: '1px solid var(--border-color)', borderRadius: '6px', display: 'flex', justifyContent: 'space-between' }}>
                                                 <div>
                                                     <strong>{event.NAME}</strong>
-                                                    <div style={{ fontSize: '0.9em', color: '#666' }}>
-                                                        {new Date(event.DATE).toLocaleDateString()} {new Date(event.DATE).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                    <div style={{ fontSize: '0.9em', color: 'var(--text-muted)' }}>
+                                                        {new Date(event.DATE).toLocaleDateString(undefined, { timeZone: 'UTC' })}
                                                     </div>
                                                 </div>
                                                 {event.TICKET_LINK && (
-                                                    <a href={event.TICKET_LINK} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9em' }}>Tickets</a>
+                                                    <a href={event.TICKET_LINK} target="_blank" rel="noopener noreferrer" style={{ fontSize: '0.9em', color: 'var(--text-primary)' }}>Tickets</a>
                                                 )}
                                             </li>
                                         ))}
                                     </ul>
                                 ) : (
-                                    <p style={{ color: '#666', fontStyle: 'italic' }}>No events found for this venue.</p>
+                                    <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>No events found for this venue.</p>
                                 )}
                             </div>
                         )}

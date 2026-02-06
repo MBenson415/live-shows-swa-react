@@ -11,6 +11,7 @@ export default function EventManager() {
         name: '', band_id: '', venue_id: '', date: '', ticket_link: '', facebook_link: '', promo: ''
     });
     const [editingId, setEditingId] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
 
     useEffect(() => {
         fetchEvents();
@@ -162,7 +163,7 @@ export default function EventManager() {
                 
                 <select name="band_id" value={formData.band_id} onChange={handleInputChange} required>
                     <option value="">Select Band</option>
-                    {bands.map(b => <option key={b.ID} value={b.ID}>{b.NAME}</option>)}
+                    {bands.filter(b => b.Is_Active).map(b => <option key={b.ID} value={b.ID}>{b.NAME}</option>)}
                 </select>
 
                 <div style={{ minWidth: '200px' }}>
@@ -248,19 +249,33 @@ export default function EventManager() {
                                 />
                             )}
                             <div>
-                                <strong>{event.NAME}</strong> - {new Date(event.DATE).toLocaleDateString()}
+                                <strong>{event.NAME}</strong> - {new Date(event.DATE).toLocaleDateString(undefined, { timeZone: 'UTC' })}
                                 <div style={{ fontSize: '0.9em', color: '#666' }}>
                                     {getBandName(event.BAND_ID)} @ {getVenueName(event.VENUE_ID)}
                                 </div>
                             </div>
                         </div>
                         <div>
+                            {event.PROMO && <button onClick={() => setPreviewImage(event.PROMO)}>Preview</button>}
                             <button onClick={() => handleEdit(event)}>Edit</button>
                             <button onClick={() => handleDelete(event.ID)}>Delete</button>
                         </div>
                     </li>
                 ))}
             </ul>
+
+            {previewImage && (
+                <div className="modal-overlay" onClick={() => setPreviewImage(null)}>
+                    <div style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh' }} onClick={e => e.stopPropagation()}>
+                        <button className="modal-close" onClick={() => setPreviewImage(null)}>&times;</button>
+                        <img
+                            src={previewImage}
+                            alt="Promo preview"
+                            style={{ maxWidth: '90vw', maxHeight: '90vh', objectFit: 'contain', borderRadius: '8px', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
