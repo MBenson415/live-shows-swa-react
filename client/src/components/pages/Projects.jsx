@@ -24,23 +24,23 @@ function Projects() {
       description: 'Droplift was founded in the early 2010\'s by songwriters Tony Zamora (vocals, guitar) and Angus Barrs (vocals, bass) and added Marshall Benson in 2018 on lead guitar and production duties. The band brought a unique style to the post-grunge sound, with intertwining vocal harmonies soaring (Zamora / Barrs) over buzzsaw rhythm guitars and searing leads (Benson). The group released singles "Blurred", "Faith", and "Mistaken" all recorded and mixed at Peregrine Engineering in South Austin, and played a handful of gigs backed by drummers Jordan Goldman and Bailey Moates.\n\nThe group broke up in 2019 with Zamora spinning off a primarily acoustic solo project that continues to create new music and perform in Austin and the greater central Texas area, but is rebooting in 2026 with new drummer Jon Renner, with single releases planned and new shows on the books in Central Texas.'
     },
     {
-      id: 4,
-      name: 'FM Rodeo',
-      bandImage: 'https://squarespacemusic.blob.core.windows.net/$web/fmrodeoband.webp',
-      logo: 'https://squarespacemusic.blob.core.windows.net/$web/fmrodeo.jpg',
-      description: 'Based out of the Hill Country in central Texas, FM Rodeo started in 2015 when Troy Dry (vocals/guitars) and Johnny Elrod (Drums) began recording the Machine Shop sessions.\n\nElements of grunge, punk and alternative music can be heard in their tracks, often compared to Green Day, Nirvana, Oasis, Amyl and The Sniffers, Together, Pangea Microwave, Radkey, Murdocks, Local H, The Toadies and The Libertines Wavves.\n\nMarshall joined on bass duties in the Spring of 2023, providing an electrifying live element and bottom end groove to a set of new recordings and invigorating live performances.'
-    },
-    {
       id: 5,
-      name: 'Peregrine',
+      name: 'Peregrine 2183',
       bandImage: 'https://squarespacemusic.blob.core.windows.net/$web/peregrinestudio.webp',
       logo: 'https://squarespacemusic.blob.core.windows.net/$web/peregrinelogo.webp',
       url: 'https://soundcloud.com/peregrine2183',
       description: 'Peregrine 2183 is a studio project envisioned by Marshall Benson in 2013; his approach hybridized the popular style of Synthwave with overdubbed electric guitar leads and solos. Often described as thematic and at times cinematic, the experimental style was crafted to stimulate imagery in the listener\'s visual mind, often with fantastical subjects ranging from outer space to futuristic cybernetics.\n\nThe music featured 80\'s style drum machines and synthesizers, and highly-effected layered guitars. One listener described the music as the nostalgia-laden "ending scene credits to an 80\'s action cop movie".\n\nPeregrine is always lurking, and still releases demos and creative snippets to SoundCloud as an always-on creative outlet for its creator.'
     }
   ];
-
+  
   const pastProjects = [
+    {
+      id: 4,
+      name: 'FM Rodeo',
+      bandImage: 'https://squarespacemusic.blob.core.windows.net/$web/fmrodeoband.webp',
+      logo: 'https://squarespacemusic.blob.core.windows.net/$web/fmrodeo.jpg',
+      description: 'Based out of the Hill Country in central Texas, FM Rodeo started in 2015 when Troy Dry (vocals/guitars) and Johnny Elrod (Drums) began recording the Machine Shop sessions.\n\nElements of grunge, punk and alternative music can be heard in their tracks, often compared to Green Day, Nirvana, Oasis, Amyl and The Sniffers, Together, Pangea Microwave, Radkey, Murdocks, Local H, The Toadies and The Libertines Wavves.\n\nMarshall joined on bass duties in the Spring of 2023, providing an electrifying live element and bottom end groove to a set of new recordings and invigorating live performances.'
+    },
     {
       id: 6,
       name: 'King Cherry',
