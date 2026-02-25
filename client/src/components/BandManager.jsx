@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function BandManager() {
     const [bands, setBands] = useState([]);
-    const [formData, setFormData] = useState({ name: '', logo_image_link: '', is_active: 1, start_date: '', end_date: '', location: '' });
+    const [formData, setFormData] = useState({ name: '', logo_image_link: '', is_active: 1, start_date: '', end_date: '', location: '', band_image: '', description: '', url: '', display_on_site: 1 });
     const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
@@ -10,7 +10,7 @@ export default function BandManager() {
     }, []);
 
     async function fetchBands() {
-        const res = await fetch('/api/bands');
+        const res = await fetch('/api/bands?all=true');
         if (res.ok) setBands(await res.json());
     }
 
@@ -30,7 +30,7 @@ export default function BandManager() {
         });
 
         if (res.ok) {
-            setFormData({ name: '', logo_image_link: '', is_active: 1, start_date: '', end_date: '', location: '' });
+            setFormData({ name: '', logo_image_link: '', is_active: 1, start_date: '', end_date: '', location: '', band_image: '', description: '', url: '', display_on_site: 1 });
             setEditingId(null);
             fetchBands();
         }
@@ -49,7 +49,11 @@ export default function BandManager() {
             is_active: band.Is_Active ? 1 : 0,
             start_date: band.START_DATE ? band.START_DATE.split('T')[0] : '',
             end_date: band.END_DATE ? band.END_DATE.split('T')[0] : '',
-            location: band.LOCATION || ''
+            location: band.LOCATION || '',
+            band_image: band.BAND_IMAGE || '',
+            description: band.DESCRIPTION || '',
+            url: band.URL || '',
+            display_on_site: band.Display_On_Site ? 1 : 0
         });
         setEditingId(band.ID);
     }
@@ -132,6 +136,70 @@ export default function BandManager() {
                     value={formData.logo_image_link}
                     onChange={handleInputChange}
                 />
+
+                <div style={{ marginBottom: '10px' }}>
+                    <label style={{ display: 'block', marginBottom: '5px' }}>Band Image:</label>
+                    <input type="file" accept="image/*" onChange={async (e) => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        const base64Promise = new Promise((resolve, reject) => {
+                            reader.onload = () => resolve(reader.result.split(',')[1]);
+                            reader.onerror = reject;
+                        });
+                        reader.readAsDataURL(file);
+                        const fileData = await base64Promise;
+                        try {
+                            const res = await fetch('/api/upload', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ fileName: file.name, fileType: file.type, fileData })
+                            });
+                            if (res.status === 409) {
+                                if (confirm('File already exists. Overwrite?')) {
+                                    const res2 = await fetch('/api/upload?overwrite=true', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ fileName: file.name, fileType: file.type, fileData })
+                                    });
+                                    if (res2.ok) {
+                                        const result = await res2.json();
+                                        setFormData(prev => ({ ...prev, band_image: result.url }));
+                                    }
+                                }
+                                return;
+                            }
+                            if (res.ok) {
+                                const result = await res.json();
+                                setFormData(prev => ({ ...prev, band_image: result.url }));
+                            }
+                        } catch (error) {
+                            console.error('Error uploading image:', error);
+                            alert('Error uploading image');
+                        }
+                    }} />
+                    {formData.band_image && <div style={{ marginTop: '5px', fontSize: '0.8em' }}>Current: {formData.band_image}</div>}
+                </div>
+                <input
+                    name="band_image"
+                    placeholder="Band Image URL"
+                    value={formData.band_image}
+                    onChange={handleInputChange}
+                />
+                <input
+                    name="url"
+                    placeholder="Website URL"
+                    value={formData.url}
+                    onChange={handleInputChange}
+                />
+                <textarea
+                    name="description"
+                    placeholder="Description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows={5}
+                    style={{ width: '100%', resize: 'vertical' }}
+                />
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div>
                         <label style={{ display: 'block', marginBottom: '5px' }}>Start Date:</label>
@@ -148,18 +216,29 @@ export default function BandManager() {
                     value={formData.location}
                     onChange={handleInputChange}
                 />
-                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
-                    <input
-                        type="checkbox"
-                        checked={formData.is_active === 1}
-                        onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked ? 1 : 0 }))}
-                        style={{ width: 'auto' }}
-                    />
-                    Active
-                </label>
+                <div style={{ display: 'flex', gap: '20px' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            checked={formData.is_active === 1}
+                            onChange={(e) => setFormData(prev => ({ ...prev, is_active: e.target.checked ? 1 : 0 }))}
+                            style={{ width: 'auto' }}
+                        />
+                        Active
+                    </label>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            checked={formData.display_on_site === 1}
+                            onChange={(e) => setFormData(prev => ({ ...prev, display_on_site: e.target.checked ? 1 : 0 }))}
+                            style={{ width: 'auto' }}
+                        />
+                        Display on Site
+                    </label>
+                </div>
                 <div style={{ display: 'flex', gap: '10px' }}>
                     <button type="submit" className="btn-primary">{editingId ? 'Update' : 'Add'} Band</button>
-                    {editingId && <button type="button" className="btn-secondary" onClick={() => { setEditingId(null); setFormData({ name: '', logo_image_link: '', is_active: 1, start_date: '', end_date: '', location: '' }); }}>Cancel</button>}
+                    {editingId && <button type="button" className="btn-secondary" onClick={() => { setEditingId(null); setFormData({ name: '', logo_image_link: '', is_active: 1, start_date: '', end_date: '', location: '', band_image: '', description: '', url: '', display_on_site: 1 }); }}>Cancel</button>}
                 </div>
             </form>
 
